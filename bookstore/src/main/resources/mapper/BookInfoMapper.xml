@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.store.mapper.BookInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.store.pojo.BookInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="book_Id" property="bookId" jdbcType="INTEGER" />
+    <result column="type_Id" property="typeId" jdbcType="INTEGER" />
+    <result column="book_name" property="bookName" jdbcType="VARCHAR" />
+    <result column="book_press" property="bookPress" jdbcType="VARCHAR" />
+    <result column="book_pub_date" property="bookPubDate" jdbcType="TIMESTAMP" />
+    <result column="book_author" property="bookAuthor" jdbcType="VARCHAR" />
+    <result column="book_price" property="bookPrice" jdbcType="DOUBLE" />
+    <result column="book_desc" property="bookDesc" jdbcType="VARCHAR" />
+    <result column="book_picture" property="bookPicture" jdbcType="VARCHAR" />
+    <result column="book_store_count" property="bookStoreCount" jdbcType="INTEGER" />
+  </resultMap>
+</mapper>

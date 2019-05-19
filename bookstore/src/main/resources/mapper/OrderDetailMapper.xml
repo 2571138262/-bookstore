@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.store.mapper.OrderDetailMapper">
+  <resultMap id="BaseResultMap" type="com.store.pojo.OrderDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="detail_Id" jdbcType="INTEGER" property="detailId" />
+    <result column="unique_identifier" jdbcType="VARCHAR" property="uniqueIdentifier" />
+    <result column="b_Id" jdbcType="INTEGER" property="bId" />
+    <result column="order_count" jdbcType="INTEGER" property="orderCount" />
+    <result column="post_status" jdbcType="BIT" property="postStatus" />
+    <result column="recev_status" jdbcType="BIT" property="recevStatus" />
+    <result column="total_price" jdbcType="DOUBLE" property="totalPrice" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.store.pojo.OrderDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="detail_Id" jdbcType="INTEGER" property="detailId" />
+    <result column="unique_identifier" jdbcType="VARCHAR" property="uniqueIdentifier" />
+    <result column="b_Id" jdbcType="INTEGER" property="bId" />
+    <result column="order_count" jdbcType="INTEGER" property="orderCount" />
+    <result column="post_status" jdbcType="BIT" property="postStatus" />
+    <result column="recev_status" jdbcType="BIT" property="recevStatus" />
+    <result column="total_price" jdbcType="DOUBLE" property="totalPrice" />
+  </resultMap>
+</mapper>

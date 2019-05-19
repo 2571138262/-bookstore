@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.springframework.org/schema/data/jaxb" xmlns:box-shadow="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" th:href="@{/css/shopcar.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.min.css}">
+    <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}"></script>
+</head>
+<body style="background-color:#edeff0;">
+<!--style="background-image: url(/img/header-app-image.jpg);"    style="background-color:#edeff0;"-->
+<!-- 头部 -->
+<header class="" style="border:none;">
+    <nav class="navbar navbar-default" style="background-color:#091827; border:none;">
+        <div class="col-md-1"><a href="#"
+                                 style="color: #d9534f; font-family: Arial; font-size: 30px; text-decoration:none;"><strong>Book</strong></a>
+        </div>
+        <div class="container-fluid col-md-11" style="border:none;">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand " th:if="${result.extend.typeId eq 'ALL'}" href="/bookstore/querypaged"
+                   style="color: #db6f6a; font-size: 20px;"><strong>All</strong></a>
+                <a class="navbar-brand " th:unless="${result.extend.typeId eq 'ALL'}" href="/bookstore/querypaged"
+                   style="color: #a6e1ec; font-size: 20px;"><strong>All</strong></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav" th:each="type:${result.extend.types}">
+                    <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
+                    <li th:if="${type.bookTypeId != result.extend.typeId}"><a
+                            th:href="@{'/bookstore/queryByType?typeId=' + ${type.bookTypeId}}"
+                            th:text="${type.bookTypeName}" style="color: #a6e1ec"></a></li>
+                    <li th:if="${type.bookTypeId == result.extend.typeId}"><a
+                            th:href="@{'/bookstore/queryByType?typeId=' + ${type.bookTypeId}}"
+                            th:text="${type.bookTypeName}" style="color: #db6f6a"></a></li>
+                </ul>
+                <form class="navbar-form navbar-left" method="get" action="/bookstore/queryByName">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="name" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-default" style="text-decoration:none;">GO</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a style="color: #a6e1ec; font-size: 20px;" th:href="@{'/customer/userInfo'}">
+                            <strong th:text="${result.extend.user.custName}">Home</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a style="color: #a6e1ec; font-size: 20px;" th:href="@{'/customer/userSignOut'}">
+                            <strong>退出</strong>
+                        </a>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>
+<div style="min-height: 800px;">
+    <div id="main">
+        <div class="container">
+            <!-- 用户信息 -->
+            <div class="row">
+                <div style="padding-top: 2%;padding-bottom: 30px;">
+                    <a><span
+                            style="color: #d43f3a;font-size: 30px; font-family: Verdana;"><strong>User Center</strong></span></a>
+                </div>
+            </div>
+            <div class="row">
+                <div style="padding-top: 2%;padding-bottom: 30px;">
+                    <ul class="nav nav-pills ">
+                        <li role="presentation" class="active" th:if="${result.extend.center eq 'MYINFO'}"><a
+                                th:href="@{'/customer/userInfo'}">个人信息</a></li>
+                        <li role="presentation" th:unless="${result.extend.center eq 'MYINFO'}"><a
+                                th:href="@{'/customer/userInfo'}">个人信息</a></li>
+                        <li role="presentation" class="active" th:if="${result.extend.center eq 'MYCART'}"><a
+                                th:href="@{'/goods/goodslist'}">我的购物车</a></li>
+                        <li role="presentation" th:unless="${result.extend.center eq 'MYCART'}"><a
+                                th:href="@{'/goods/goodslist'}">我的购物车</a></li>
+                        <li role="presentation" class="active" th:if="${result.extend.center eq 'MYORDER'}"><a
+                                th:href="@{'/customer/queryuserorder'}">我的订单</a></li>
+                        <li role="presentation" th:unless="${result.extend.center eq 'MYORDER'}"><a
+                                th:href="@{'/customer/queryuserorder'}">我的订单</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!--个人信息-->
+            <div class="row">
+                <div th:if="${result.extend.center eq 'MYINFO'}">
+                    <!--// 查看个人信息-->
+                    <form style="max-width: 1104px; margin: 10px auto 120px; box-shadow: 0 0px 8px rgba(7, 17, 27, 0.2); padding:30px 30px;" class="form-horizontal "  th:if="${result.extend.action eq 'LOOK'}">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>用户名</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" th:name="custName"
+                                       th:value="${result.extend.user.custName}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>真实姓名</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${result.extend.user.custTrueName}" name="custTrueName" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>性别</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" th:if="${result.extend.user.custSex}"
+                                       name="custSex" th:value="男" disabled>
+                                <input type="text" class="form-control" th:unless="${result.extend.user.custSex}"
+                                       name="custSex" th:value="女" disabled>
+                            </div>
+                        </div>    
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>电话</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${result.extend.user.custTel}" name="custTel" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>邮箱</strong></label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control"
+                                       th:value="${result.extend.user.custEmail}" name="custEmail" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>地址</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" th:if="${result.extend.action eq 'LOOK'}"
+                                       th:value="${result.extend.user.custAddr}" name="custAddr" disabled>
+                                <input type="text" class="form-control" th:if="${result.extend.action eq 'UPDATE'}"
+                                       th:value="${result.extend.user.custAddr}" name="custAddr">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="custRegTime" class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>注册时间</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${#dates.format(result.extend.user.custRegTime, 'yyyy-MM-dd HH:mm:ss')}"
+                                       name="custRegTime" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="custLastLogin" class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>最近登陆时间</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${#dates.format(result.extend.user.custLastLogin, 'yyyy-MM-dd HH:mm:ss')}"
+                                       name="custLastLogin" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <a class="btn btn-default"
+                                   th:href="@{'/customer/userInfo?action=UPDATE'}" role="button">修改</a>
+                            </div>
+                        </div>
+                    </form>
+                    <!--// 修改个人信息-->
+                    <form style="max-width: 1104px; margin: 10px auto 120px; box-shadow: 0 0px 8px rgba(7, 17, 27, 0.2); padding:30px 30px;"
+                          class="form-horizontal " method="POST" th:action="@{'/customer/userInfoUpdate'}"
+                          th:if="${result.extend.action eq 'UPDATE'}">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>用户名</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" th:name="custName"
+                                       th:value="${result.extend.user.custName}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>密码</strong></label>
+                            <!--需要优化-->
+                            <div class="col-sm-10" th:if="${result.extend.message eq '手机号码格式不正确'}">
+                                <input type="password" class="form-control" name="custPwd"
+                                       placeholder="Password">
+                            </div>
+                            <div class="col-sm-10" th:if="${result.extend.message eq '邮箱格式不正确'}">
+                                <input type="password" class="form-control" name="custPwd"
+                                       placeholder="Password">
+                            </div>
+                            <div class="col-sm-10" th:if="${result.extend.message eq 'NOTIP'}">
+                                <input type="password" class="form-control" name="custPwd"
+                                       placeholder="Password">
+                            </div>
+                            <div class="col-sm-10" th:if="${result.extend.message eq '俩次密码不一致'}">
+                                <input type="password" class="form-control" name="custPwd"
+                                       placeholder="俩次密码不一致" style="background-color: #DB7E6B;">
+                            </div>
+                            <div class="col-sm-10" th:if="${result.extend.message eq '密码长度至少8位'}">
+                                <input type="password" class="form-control" name="custPwd"
+                                       placeholder="密码长度至少8位" style="background-color: #DB7E6B;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>确认密码</strong></label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" name="custPwdConfirm"
+                                       placeholder="PasswordConfirm">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>真实姓名</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${result.extend.user.custTrueName}" name="custTrueName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>性别</strong></label>
+                            <div class="checkbox col-sm-10" id="custSex">
+                                <label class="radio-inline">
+                                    <input type="radio" value="true" name="custSex" aria-label="..."
+                                           th:if="${result.extend.user.custSex}" checked>
+                                    <input type="radio" value="true" name="custSex" aria-label="..."
+                                           th:unless="${result.extend.user.custSex}"><a
+                                        style="color: #db6f6a"><strong>男</strong></a>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="false" name="custSex" aria-label="..."
+                                           th:if="${result.extend.user.custSex}">
+                                    <input type="radio" value="false" name="custSex" aria-label="..."
+                                           th:unless="${result.extend.user.custSex}" checked><a
+                                        style="color: #db6f6a"><strong>女</strong></a>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>电话</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" th:unless="${result.extend.message eq '手机号码格式不正确'}"
+                                       th:value="${result.extend.user.custTel}" name="custTel">
+                                <input type="text" class="form-control" th:if="${result.extend.message eq '手机号码格式不正确'}"
+                                       placeholder="手机号码格式不正确" name="custTel" style="background-color: #DB7E6B;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>邮箱</strong></label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" th:unless="${result.extend.message eq '邮箱格式不正确'}"
+                                       th:value="${result.extend.user.custEmail}" name="custEmail">
+                                <input type="email" class="form-control" th:if="${result.extend.message eq '邮箱格式不正确'}"
+                                       placeholder="邮箱格式不正确" name="custEmail" style="background-color: #DB7E6B;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>地址</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${result.extend.user.custAddr}" name="custAddr">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="custRegTime" class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>注册时间</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="custRegTime"
+                                       th:value="${#dates.format(result.extend.user.custRegTime, 'yyyy-MM-dd HH:mm:ss')}"
+                                       name="custRegTime" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="custLastLogin" class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>最近登陆时间</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="custLastLogin"
+                                       th:value="${#dates.format(result.extend.user.custLastLogin, 'yyyy-MM-dd HH:mm:ss')}"
+                                       name="custLastLogin" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">保存</button>
+                                <button type="reset" class="btn btn-default">取消</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+            <!--我的购物车-->
+            <div class="row">
+                <div th:if="${result.extend.center eq 'MYCART'}">
+                    <label class="col-sm-1"></label>
+                    <div th:unless="${result.extend.messageTip eq 'NOTIP'}">
+                        <label class="col-sm-11 control-label" style="color: #db6f6a">
+                            <strong th:text="${result.extend.messageTip}"></strong>
+                        </label>
+                    </div>
+                    <form th:action="@{'/order/settlement'}" id="cartBody" method="post"
+                          style="margin: 10px auto 120px; box-shadow: 0 0px 8px rgba(7, 17, 27, 0.2); padding:30px 30px;">
+                        <div class="cart-panel">
+                            <div class="hd">
+                                <ul class="order-title">
+                                    <li>
+                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    </li>
+                                    <!--<li><input type="checkbox" id="check-all" class="check-all"><span>全选</span></li>-->
+                                    <li class="product">商品名称</li>
+                                    <li class="total-price">总价</li>
+                                    <li class="unit-price">单价</li>
+                                    <li class="number">数量</li>
+                                    <li class="operate">操作</li>
+                                </ul>
+                            </div>
+                            <div class="bd" th:unless="${result.extend.goodsList eq 'NOGOODS'}">
+                                <ul class="order-list" th:each="goods:${result.extend.goodsList}">
+                                    <li><input type="checkbox" id="checkbox" class="check" th:name="goodsIds"
+                                               th:value="${goods.goodsId}"></li>
+                                    <!--<input type="hidden" th:name="goodsIds" th:value="${goods.goodsId}">-->
+                                    <li class="img-box">
+                                        <a href="#">
+                                            <img th:src="@{${goods.bookPicture}}" alt="">
+                                        </a>
+                                    </li>
+                                    <li class="product">
+                                        <a href="#">
+                                            <span th:text="${goods.bookinfoName}">书名</span>
+                                        </a>
+                                    </li>
+                                    <li class="total-price">
+                                        <span class="price-sign"></span>
+                                        <span class="price-num" th:text="${goods.totalPrice}">总价</span>
+                                    </li>
+                                    <li class="unit-price">
+                                        <span class="price-sign"></span>
+                                        <span class="price-num" th:text="${goods.price}">单价</span>
+                                    </li>
+                                    <li class="number">
+                                        <div class="input-num">
+                                            <a th:href="@{'/goods/decr?goodsId='+${goods.goodsId}}">-</a>
+                                            <input type="text" th:value="${goods.count}" class="num" disabled>
+                                            <a th:href="@{'/goods/incr?goodsId='+${goods.goodsId}}">+</a>
+                                        </div>
+                                    </li>
+                                    <li class="operate"><a
+                                            th:href="@{'/goods/deleteGoods?goodsId=' + ${goods.goodsId}}">删除</a></li>
+                                </ul>
+                                <ul class="order-list">
+                                    <!--填写地址-->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"
+                                               style="color: #db6f6a; font-size: 15px;"><strong>收货人姓名</strong></label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" th:if="${result.extend.addressVo eq 'NOADDR'}" name="receverName" placeholder="收货人姓名">
+                                            <input type="text" class="form-control" th:unless="${result.extend.addressVo eq 'NOADDR'}" name="receverName" th:value="${result.extend.addressVo.receverName}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"
+                                               style="color: #db6f6a; font-size: 15px;"><strong>收货地址</strong></label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="receverAddr" th:if="${result.extend.addressVo eq 'NOADDR'}"
+                                                   placeholder="收货地址">
+                                            <input type="text" class="form-control" name="receverAddr" th:unless="${result.extend.addressVo eq 'NOADDR'}" th:value="${result.extend.addressVo.receverAddr}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"
+                                               style="color: #db6f6a; font-size: 15px;"><strong>收货人电话</strong></label>
+                                        <div class="col-sm-10">
+                                            <div th:unless="${result.extend.message eq '手机号码格式不正确'}">
+                                                <input type="text" class="form-control" name="receverTel" th:if="${result.extend.addressVo eq 'NOADDR'}"
+                                                       placeholder="收货人电话号码">
+                                                <input type="text" class="form-control" name="receverTel" th:unless="${result.extend.addressVo eq 'NOADDR'}" th:value="${result.extend.addressVo.receverTel}">
+                                            </div>
+                                            <div th:if="${result.extend.message eq '手机号码格式不正确'}">
+                                                <input type="text" class="form-control" name="receverTel"
+                                                       th:placeholder="${result.extend.message}" style="background-color: #DB7E6B;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ul>
+                                <ul class="order-list">
+                                    <!--填写地址-->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"
+                                               style="color: #db6f6a; font-size: 15px;"><strong>留言</strong></label>
+                                        <div class="col-sm-10">
+                                            <textarea class="col-sm-12" name="message" rows="3" th:unless="${result.extend.addressVo eq 'NOADDR'}" th:text="${result.extend.addressVo.message}"></textarea>
+                                            <textarea class="col-sm-12" name="message" rows="3" th:if="${result.extend.addressVo eq 'NOADDR'}" placeholder="说点什么吧"></textarea>
+                                        </div>
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- 结算栏 -->
+                        <div class="pay-bar">
+                            <button th:if="${result.extend.message eq '空空如也'}" disabled="disabled">去结算</button>
+                            <button th:unless="${result.extend.message eq '空空如也'}">去结算</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--我的订单-->
+            <div class="row">
+                <div th:if="${result.extend.center eq 'MYORDER'}">
+                    <div style="margin: 10px auto 120px; box-shadow: 0 0px 8px rgba(7, 17, 27, 0.2); padding:30px 30px;">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>订单编号</th>
+                                <th>书名</th>
+                                <th>数量</th>
+                                <th>总价</th>
+                                <th>收货人姓名</th>
+                                <th>收货人地址</th>
+                                <th>收货人电话</th>
+                                <th>时间</th>
+                                <th>发货状态</th>
+                                <th>收货状态</th>
+                            </tr>
+                            </thead>
+                            <tbody th:unless="${result.extend.custOrderVos eq 'NOORDER'}">
+                            <tr th:each="custOrder:${result.extend.custOrderVos}">
+                                <th th:text="${custOrder.id}"></th>
+                                <th th:text="${custOrder.bookName}"></th>
+                                <th th:text="${custOrder.orderCount}"></th>
+                                <th th:text="${custOrder.totalPrice}"></th>
+                                <th th:text="${custOrder.receverName}"></th>
+                                <th th:text="${custOrder.receverAddr}"></th>
+                                <th th:text="${custOrder.receverTel}"></th>
+                                <th th:text="${#dates.format(custOrder.orderDate, 'yyyy-MM-dd')}"></th>
+                                <th>
+                                    <span th:unless="${custOrder.postStatus}"
+                                          style="color: #d43f3a">未发</span>
+                                    <span th:if="${custOrder.postStatus}" style="color: #3e8f3e">已发</span>
+                                </th>
+                                <th>
+                                    <span th:unless="${custOrder.recevStatus}"
+                                          style="color: #d43f3a">未收</span>
+                                    <span th:if="${custOrder.recevStatus}" style="color: #3e8f3e">已收</span>
+                                    <a th:if="${custOrder.postStatus}">
+                                        <a role="button" class="btn btn-primary btn-xs"
+                                           th:unless="${custOrder.recevStatus}"
+                                           th:href="@{'/customer/ConfirmReceipt?id=' + ${custOrder.id}}">确认收货</a>
+                                    </a>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--分页-->
+    </div>
+</div>
+<!-- 尾部 -->
+<footer class="footer">
+    <div class="waper">
+        <div class="footerWaper">
+            <div class="followus">
+                <a href="" class="followus_weixin">
+                    <div class="flw-weixin-box"></div>
+                </a>
+                <a href="" class="followus_weibo"></a>
+                <a href="" class="followus_qzone"></a>
+            </div>
+            <div class="footer_intro">
+                <div class="footer_link">
+                    <ul>
+                        <li><a href="">网站首页</a></li>
+                        <li><a href="">企业合作</a></li>
+                        <li><a href="">人才招聘</a></li>
+                        <li><a href="">联系我们</a></li>
+                        <li><a href="">讲师招募</a></li>
+                        <li><a href="">常见问题</a></li>
+                        <li><a href="">意见反馈</a></li>
+                        <li><a href="">慕课大学</a></li>
+                        <li><a href="">友情链接</a></li>
+                    </ul>
+                </div>
+                <p>Copyright © 2017 imooc.com All Rights Reserved | 京ICP备 13046642号-2</p>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

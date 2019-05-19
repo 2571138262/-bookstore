@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="MysqlContext" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value=""/>
+        <property name="endingDelimiter" value=""/>
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="com.store.utils.MyMapper"/>
+        </plugin>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/book_store"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+
+
+        <!--对于生成的pojo所在的包-->
+        <javaModelGenerator targetPackage="com.store.pojo" targetProject="src/main/java"/>
+
+        <!--对于生成的mapper所在的目录-->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+
+        <!-- 配置mapper对应的java映射 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.store.mapper" targetProject="src/main/java"/>
+        
+        <!-- table指定每个表的生成策略 -->
+        <!--<table schema="book_store" tableName="tb_goods" domainObjectName="Goods"></table>-->
+        <!--<table schema="book_store" tableName="tb_booktypeinfo" domainObjectName="BookTypeInfo"></table>-->
+        <!--<table schema="book_store" tableName="tb_manager" domainObjectName="Manager"></table>-->
+        <!--<table schema="book_store" tableName="tb_customerinfo" domainObjectName="CustomerInfo"></table>-->
+        <!--<table schema="book_store" tableName="tb_order" domainObjectName="Order"></table>-->
+        <table schema="book_store" tableName="tb_orderdetail" domainObjectName="OrderDetail"></table>
+
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <title>网上书店管理员服务门户</title>
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.min.css}">
+    <script th:src="@{/js/jquery-1.12.4.min.js}"></script>
+    <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div style="height: 66px;background-color: #3b8dd1;">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3" style="margin-top: 15px;"><a style="font-size: 18px;color: #fff;">网上书店管理员服务门户</a></div>
+        <div class="col-md-6"></div>
+        <div class="col-md-2" style="margin-top: 15px;">
+            <a class="btn btn-default" href="#" role="button" disabled="disabled"
+               th:text="${result.extend.manager.adminName}">管理员</a>
+            <a class="btn btn-default" th:href="@{'/manager/signout'}" role="button">退出</a>
+        </div>
+    </div>
+</div>
+<div class="col-md-2" style="background-color:rgba(238,238,238,0.5); border:none; min-height: 655.2px;">
+    <span>&nbsp;</span>
+    <ul class="nav nav-pills nav-stacked">
+        <li role="presentation" class="active" th:if="${result.extend.option eq 'USERMANAGEMENT'}"><a
+                th:href="@{'/Manager/UserManagement'}"><span
+                style="margin-left: 50px;">用户管理</span></a></li>
+        <li role="presentation" th:unless="${result.extend.option eq 'USERMANAGEMENT'}"><a
+                th:href="@{'/Manager/UserManagement'}"><span
+                style="margin-left: 50px;">用户管理</span></a></li>
+        <li role="presentation" class="active" th:if="${result.extend.option eq 'BOOKMANAGEMENT'}"><a
+                th:href="@{'/Manager/BookManagement'}"><span
+                style="margin-left: 50px;">图书管理</span></a></li>
+        <li role="presentation" th:unless="${result.extend.option eq 'BOOKMANAGEMENT'}"><a
+                th:href="@{'/Manager/BookManagement'}"><span
+                style="margin-left: 50px;">图书管理</span></a></li>
+        <li role="presentation" class="active" th:if="${result.extend.option eq 'ORDERMANAGEMENT'}"><a
+                th:href="@{'/Manager/OrderManagement'}"><span
+                style="margin-left: 50px;">订单管理</span></a></li>
+        <li role="presentation" th:unless="${result.extend.option eq 'ORDERMANAGEMENT'}"><a
+                th:href="@{'/Manager/OrderManagement'}"><span
+                style="margin-left: 50px;">订单管理</span></a></li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-9">
+        <span>&nbsp;</span>
+        <!--用户信息-->
+        <div th:if="${result.extend.option eq 'USERMANAGEMENT'}">
+            <!--用户信息展示-->
+            <table class="table table-striped"
+                   th:if="${result.extend.action eq 'LOOK'}">
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>密码</th>
+                    <th>真实姓名</th>
+                    <th>性别</th>
+                    <th>电话</th>
+                    <th>邮箱</th>
+                    <th>地址</th>
+                    <th>注册时间</th>
+                    <th>最近登陆时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody th:unless="${result.extend.customerInfos eq 'NOTIP'}">
+                <tr th:each="customerInfo:${result.extend.customerInfos}">
+                    <th th:text="${customerInfo.custName}">客户名称</th>
+                    <th>***</th>
+                    <th th:text="${customerInfo.custTrueName}">真实姓名</th>
+                    <th th:if="${customerInfo.custSex}">男</th>
+                    <th th:unless="${customerInfo.custSex}">女</th>
+                    <th th:text="${customerInfo.custTel}">客户电话</th>
+                    <th th:text="${customerInfo.custEmail}">E-mail</th>
+                    <th th:text="${customerInfo.custAddr}">地址</th>
+                    <th th:text="${#dates.format(customerInfo.custRegTime, 'yyyy-MM-dd')}">注册时间</th>
+                    <th th:text="${#dates.format(customerInfo.custLastLogin, 'yyyy-MM-dd')}">最近登陆时间</th>
+                    <th><a class="btn btn-primary btn-sm edit_btn"
+                           th:href="@{'/Manager/UserDetail?custId=' + ${customerInfo.custId}}" role="button"><span
+                            class="glyphicon glyphicon-pencil">修改</span></a>
+                        <a class="btn btn-danger btn-sm delete_btn"
+                           th:href="@{'/Manager/UserDelete?custId=' + ${customerInfo.custId}}" role="button"><span
+                                class="glyphicon glyphicon-trash">删除</span></a>
+                    </th>
+                </tr>
+                </tbody>
+            </table>
+            <!--用户信息修改-->
+            <div th:if="${result.extend.action eq 'UPDATE'}">
+                <!--第一次访问-->
+                <div th:if="${result.extend.isFirst eq 'YES'}">
+                    <form style="max-width: 1104px; margin: 10px auto 120px; box-shadow: 0 0px 8px rgba(7, 17, 27, 0.2); padding:30px 30px;"
+                          class="form-horizontal " method="POST" th:action="@{'/Manager/UserUpdate'}">
+                        <div>
+                            <input type="hidden" name="custId" th:value="${result.extend.customerInfo.custId}">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>用户名</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" th:name="custName"
+                                       th:value="${result.extend.customerInfo.custName}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>真实姓名</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${result.extend.customerInfo.custTrueName}" name="custTrueName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="custSex" class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>性别</strong></label>
+                            <div class="checkbox col-sm-10" id="custSex">
+                                <label class="radio-inline">
+                                    <input type="radio" value="true" name="custSex" aria-label="..."
+                                           th:if="${result.extend.customerInfo.custSex}" checked>
+                                    <input type="radio" value="true" name="custSex" aria-label="..."
+                                           th:unless="${result.extend.customerInfo.custSex}"><a
+                                        style="color: #db6f6a"><strong>男</strong></a>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="false" name="custSex" aria-label="..."
+                                           th:if="${result.extend.customerInfo.custSex}">
+                                    <input type="radio" value="false" name="custSex" aria-label="..."
+                                           th:unless="${result.extend.customerInfo.custSex}" checked><a
+                                        style="color: #db6f6a"><strong>女</strong></a>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>电话</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${result.extend.customerInfo.custTel}" name="custTel">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>邮箱</strong></label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control"
+                                       th:value="${result.extend.customerInfo.custEmail}" name="custEmail">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>地址</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${result.extend.customerInfo.custAddr}" name="custAddr">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="custRegTime" class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>注册时间</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="custRegTime"
+                                       th:value="${#dates.format(result.extend.customerInfo.custRegTime, 'yyyy-MM-dd')}"
+                                       name="custRegTime" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="custLastLogin" class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>最近登陆时间</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="custLastLogin"
+                                       th:value="${#dates.format(result.extend.customerInfo.custLastLogin, 'yyyy-MM-dd')}"
+                                       name="custLastLogin" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">保存
+                                </button>
+                                <button type="reset" class="btn btn-default">取消
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--非第一次访问-->
+                <div th:if="${result.extend.isFirst eq 'NO'}">
+                    <form style="max-width: 1104px; margin: 10px auto 120px; box-shadow: 0 0px 8px rgba(7, 17, 27, 0.2); padding:30px 30px;"
+                          class="form-horizontal " method="POST" th:action="@{'/Manager/UserUpdate'}">
+                        <div>
+                            <input type="hidden" name="custId" th:value="${result.extend.customerInfo.custId}">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>用户名</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" th:name="custName"
+                                       th:value="${result.extend.customerInfo.custName}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>真实姓名</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${result.extend.customerInfo.custTrueName}" name="custTrueName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>性别</strong></label>
+                            <div class="checkbox col-sm-10">
+                                <label class="radio-inline">
+                                    <input type="radio" value="true" name="custSex" aria-label="..."
+                                           th:if="${result.extend.customerInfo.custSex}" checked>
+                                    <input type="radio" value="true" name="custSex" aria-label="..."
+                                           th:unless="${result.extend.customerInfo.custSex}"><a
+                                        style="color: #db6f6a"><strong>男</strong></a>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="false" name="custSex" aria-label="..."
+                                           th:if="${result.extend.customerInfo.custSex}">
+                                    <input type="radio" value="false" name="custSex" aria-label="..."
+                                           th:unless="${result.extend.customerInfo.custSex}" checked><a
+                                        style="color: #db6f6a"><strong>女</strong></a>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>电话</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" th:if="${result.extend.message eq 'NOTIP'}"
+                                       th:value="${result.extend.customerInfo.custTel}" name="custTel">
+                                <input type="text" class="form-control" th:if="${result.extend.message eq '手机号码格式不正确'}"
+                                       placeholder="手机号码格式不正确" name="custTel" style="background-color: #DB7E6B;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>邮箱</strong></label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" th:unless="${result.extend.message eq 'NOTIP'}"
+                                       th:value="${result.extend.customerInfo.custEmail}" name="custEmail">
+                                <input type="email" class="form-control" th:if="${result.extend.message eq '邮箱格式不正确'}"
+                                       placeholder="邮箱格式不正确" name="custEmail" style="background-color: #DB7E6B;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>地址</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${result.extend.customerInfo.custAddr}" name="custAddr">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="custRegTime" class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>注册时间</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${#dates.format(result.extend.customerInfo.custRegTime, 'yyyy-MM-dd')}"
+                                       name="custRegTime" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="custLastLogin" class="col-sm-2 control-label"
+                                   style="color: #db6f6a"><strong>最近登陆时间</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       th:value="${#dates.format(result.extend.customerInfo.custLastLogin, 'yyyy-MM-dd')}"
+                                       name="custLastLogin" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">保存
+                                </button>
+                                <button type="reset" class="btn btn-default">取消
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--图书管理-->
+        <div th:if="${result.extend.option eq 'BOOKMANAGEMENT'}">
+            <!--图书信息展示-->
+            <div th:if="${result.extend.action eq 'LOOK'}">
+                <div class="col-md-9"></div>
+                <div class="col-md-1">
+                    <a th:href="@{'/Manager/BookBeforeInsert'}" class="btn btn-primary btn-lg active" role="button">添加新的书籍</a>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>书名</th>
+                        <th>类型</th>
+                        <th>作者</th>
+                        <th>出版社</th>
+                        <th>出版日期</th>
+                        <th>定价</th>
+                        <th>库存量</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody th:unless="${result.extend.bookInfoVoList eq 'NOTIP'}">
+                    <tr th:each="bookInfo:${result.extend.bookInfoVoList}">
+                        <th th:text="${bookInfo.bookName}">书名</th>
+                        <th th:text="${bookInfo.bookTypeName}">类型</th>
+                        <th th:text="${bookInfo.bookAuthor}">作者</th>
+                        <th th:text="${bookInfo.bookPress}">出版社</th>
+                        <th th:text="${#dates.format(bookInfo.bookPubDate, 'yyyy-MM-dd')}">出版日期</th>
+                        <th th:text="${bookInfo.bookPrice}">定价</th>
+                        <th th:text="${bookInfo.bookStoreCount}">库存量</th>
+                        <th>
+                            <a class="btn btn-success btn-sm edit_btn"
+                               th:href="@{'/Manager/BookDetail?bookId=' + ${bookInfo.bookId}}" role="button"><span
+                                    class="glyphicon glyphicon-eye-open">详情</span></a>
+                            <a class="btn btn-primary btn-sm edit_btn"
+                               th:href="@{'/Manager/BookBeforeUpdate?bookId=' + ${bookInfo.bookId}}" role="button"><span
+                                    class="glyphicon glyphicon-pencil">修改</span></a>
+                            <a class="btn btn-danger btn-sm delete_btn"
+                               th:href="@{'/Manager/BookDelete?bookId=' + ${bookInfo.bookId}}" role="button"><span
+                                    class="glyphicon glyphicon-trash">删除</span></a>
+                        </th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--图书信息详情-->
+            <div id="main" th:if="${result.extend.action eq 'DETAIL'}">
+                <div class="" style="width: 65%; margin: 0 auto; padding: 0px;">
+                    <div class=""
+                         style="width: 700px; background-color:#edeff0; margin: 100px auto; margin-bottom: 40px; padding: 30px; border: 1px solid #d9d9d9; box-sizing: border-box; overflow: hidden;">
+                        <div class=""
+                             style="position: relative; float:left; width: 200px; box-sizing: border-box; margin: 0px; padding: 0px;">
+                            <div class=""
+                                 style="position: relative; width: 200px; height: 200px; margin: 20px auto; padding: 0px;">
+                                <a href="#">
+                                    <img th:src="@{${result.extend.bookInfo.bookPicture}}"
+                                         style="width: 100%;height: 100%;cursor: pointer;">
+                                </a>
+                            </div>
+                        </div>
+                        <div class=""
+                             style="float: right; width: 400px; box-sizing: border-box; margin: 0px; padding: 0px;">
+                            <div class=""
+                                 style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #d9d9d9;">
+                                <h3 th:text="${result.extend.bookInfo.bookName}"
+                                    style="margin: 0 0 6px 0; color: #0f0f0f">书名</h3>
+                            </div>
+                            <div class=""
+                                 style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #d9d9d9; color: #737373">
+                                <dl>
+                                    <!--style="font-size: 12px; margin: 12px 0; color: #737373"-->
+                                    <dt style="float: left">作者:</dt>
+                                    <dd th:text="${result.extend.bookInfo.bookAuthor}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">书籍类型:</dt>
+                                    <dd th:text="${result.extend.bookInfo.bookTypeName}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">出版社:</dt>
+                                    <dd th:text="${result.extend.bookInfo.bookPress}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">出版时间:</dt>
+                                    <dd th:text="${#dates.format(result.extend.bookInfo.bookPubDate,'yyyy-MM-dd')}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;">出版时间
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">简介:</dt>
+                                    <dd th:text="${result.extend.bookInfo.bookDesc}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">库存:</dt>
+                                    <dd th:text="${result.extend.bookInfo.bookStoreCount}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                            </div>
+                            <div class="price"
+                                 style="display: inline-block;margin-bottom: 8px;padding: 10px 16px 5px;cursor: pointer;color: #737373;font-size: 18px;">
+                                价格：
+                                <strong>
+                                    <span style="margin-right: -8px;color: red;cursor: pointer;font-size: 18px;">￥</span>
+                                    <span th:text="${result.extend.bookInfo.bookPrice}"
+                                          style="margin-right: -8px;color: red;cursor: pointer;font-size: 18px;"></span>
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--图书信息修改-->
+            <form style="max-width: 1104px; margin: 10px auto 120px; box-shadow: 0 0px 8px rgba(7, 17, 27, 0.2); padding:30px 30px;"
+                  class="form-horizontal " method="POST" th:action="@{'/Manager/BookUpdate'}"
+                  th:if="${result.extend.action eq 'UPDATE'}" enctype="multipart/form-data">
+                <div>
+                    <input type="hidden" name="bookId" th:value="${result.extend.bookInfo.bookId}">
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                           style="color: #db6f6a"><strong>图书名</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:name="bookName"
+                               th:value="${result.extend.bookInfo.bookName}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                           style="color: #db6f6a"><strong>作者</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:name="bookAuthor"
+                               th:value="${result.extend.bookInfo.bookAuthor}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                           style="color: #db6f6a"><strong>图书类型</strong></label>
+                    <div class="col-sm-2">
+                        <select class="form-control" th:name="bookTypeName">
+                            <option>选择图书类型</option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '体育'}" th:value="体育">体育
+                            </option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '动漫幽默'}" th:value="动漫幽默">
+                                动漫幽默
+                            </option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '地图地理'}" th:value="地图地理">
+                                地图地理
+                            </option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '娱乐时尚'}" th:value="娱乐时尚">
+                                娱乐时尚
+                            </option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '旅游'}" th:value="旅游">旅游
+                            </option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '生活'}" th:value="生活">生活
+                            </option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '艺术'}" th:value="艺术">艺术
+                            </option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '青春'}" th:value="青春">青春
+                            </option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '小说'}" th:value="小说">小说
+                            </option>
+                            <option th:selected="${result.extend.bookInfo.bookTypeName eq '文学'}" th:value="文学">文学
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                           style="color: #db6f6a"><strong>定价</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control"
+                               th:value="${result.extend.bookInfo.bookPrice}" name="bookPrice">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                           style="color: #db6f6a"><strong>图书封面图</strong></label>
+                    <div class="col-sm-10">
+                        <input type="file" name="file"><a th:if="${result.extend.message eq '上传失败'}"
+                                                          style="color: #DB7E6B;">上传失败</a><a
+                            th:if="${result.extend.message eq '上传失败，文件为空'}" style="color: #DB7E6B;">上传失败，文件为空</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                           style="color: #db6f6a"><strong>库存量</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control"
+                               th:value="${result.extend.bookInfo.bookStoreCount}" name="bookStoreCount">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                           style="color: #db6f6a"><strong>出版社</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control"
+                               th:value="${result.extend.bookInfo.bookPress}" name="bookPress">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                           style="color: #db6f6a"><strong>出版时间</strong></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" th:unless="${result.extend.message eq '时间格式有误'}"
+                               th:value="${#dates.format(result.extend.bookInfo.bookPubDate,'yyyy-MM-dd')}"
+                               name="dateTime">
+                        <input type="text" class="form-control" th:if="${result.extend.message eq '时间格式有误'}"
+                               placeholder="时间格式有误"
+                               name="dateTime" style="background-color: #DB7E6B;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                           style="color: #db6f6a"><strong>简介</strong></label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="3" name="bookDesc"
+                                  th:text="${result.extend.bookInfo.bookDesc}">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">保存
+                        </button>
+                        <button type="reset" class="btn btn-default">取消
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!--添加图书信息-->
+            <form style="max-width: 1104px; margin: 10px auto 120px; box-shadow: 0 0px 8px rgba(7, 17, 27, 0.2); padding:30px 30px;"
+                  class="form-horizontal " method="POST" th:action="@{'/Manager/BookInsert'}"
+                  th:if="${result.extend.action eq 'INSERT'}" enctype="multipart/form-data">
+                <div th:unless="${result.extend.message eq 'FIRST'}">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>图书名</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" th:name="bookName"
+                                   th:unless="${result.extend.message eq '图书名已经存在'}"
+                                   th:value="${result.extend.bookInfo.bookName}">
+                            <input type="text" class="form-control" th:name="bookName"
+                                   th:if="${result.extend.message eq '图书名已经存在'}" style="background-color: #DB7E6B;" placeholder="图书名已经存在">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>作者</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" th:name="bookAuthor"
+                                   th:value="${result.extend.bookInfo.bookAuthor}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>图书类型</strong></label>
+                        <div class="col-sm-2">
+                            <select class="form-control" th:name="bookTypeName">
+                                <option>选择图书类型</option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '体育'}" th:value="体育">体育
+                                </option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '动漫幽默'}" th:value="动漫幽默">
+                                    动漫幽默
+                                </option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '地图地理'}" th:value="地图地理">
+                                    地图地理
+                                </option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '娱乐时尚'}" th:value="娱乐时尚">
+                                    娱乐时尚
+                                </option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '旅游'}" th:value="旅游">旅游
+                                </option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '生活'}" th:value="生活">生活
+                                </option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '艺术'}" th:value="艺术">艺术
+                                </option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '青春'}" th:value="青春">青春
+                                </option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '小说'}" th:value="小说">小说
+                                </option>
+                                <option th:selected="${result.extend.bookInfo.bookTypeName eq '文学'}" th:value="文学">文学
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>定价</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="bookPrice"
+                                   th:value="${result.extend.bookInfo.bookPrice}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>图书封面图</strong></label>
+                        <div class="col-sm-10">
+                            <input type="file" name="file"><a th:if="${result.extend.message eq '上传失败'}">上传失败</a><a
+                                th:if="${result.extend.message eq '上传失败，文件为空'}">上传失败，文件为空</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>库存量</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="bookStoreCount"
+                                   th:value="${result.extend.bookInfo.bookStoreCount}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>出版社</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="bookPress"
+                                   th:value="${result.extend.bookInfo.bookPress}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>出版时间</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" th:unless="${result.extend.message eq '时间格式有误'}"
+                                   name="dateTime" th:value="${#dates.format(result.extend.bookInfo.bookPubDate, 'yyyy-MM-dd hh:mm:ss')}">
+                            <input type="text" class="form-control" th:if="${result.extend.message eq '时间格式有误'}"
+                                   style="background-color: #DB7E6B;"
+                                   placeholder="时间格式有误"
+                                   name="dateTime">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>简介</strong></label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="3" name="bookDesc"
+                                      th:text="${result.extend.bookInfo.bookDesc}"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">保存
+                            </button>
+                            <button type="reset" class="btn btn-default">取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${result.extend.message eq 'FIRST'}">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>图书名</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" th:name="bookName" placeholder="图书名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>作者</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" th:name="bookAuthor" placeholder="作者">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>图书类型</strong></label>
+                        <div class="col-sm-2">
+                            <select class="form-control" th:name="bookTypeName">
+                                <option>选择图书类型</option>
+                                <option th:value="体育">体育</option>
+                                <option th:value="动漫幽默">动漫幽默</option>
+                                <option th:value="地图地理">地图地理</option>
+                                <option th:value="娱乐时尚">娱乐时尚</option>
+                                <option th:value="旅游">旅游</option>
+                                <option th:value="生活">生活</option>
+                                <option th:value="艺术">艺术</option>
+                                <option th:value="青春">青春</option>
+                                <option th:value="小说">小说</option>
+                                <option th:value="文学">文学</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>定价</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="bookPrice" placeholder="定价">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>图书封面图</strong></label>
+                        <div class="col-sm-10">
+                            <input type="file" name="file">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>库存量</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="bookStoreCount" placeholder="库存量">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>出版社</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="bookPress" placeholder="出版社">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>出版时间</strong></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control"
+                                   name="dateTime" placeholder="格式为:yyyy-MM-dd">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="color: #db6f6a"><strong>简介</strong></label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="3" name="bookDesc" placeholder="简介"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">保存
+                            </button>
+                            <button type="reset" class="btn btn-default">取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--订单管理-->
+        <div th:if="${result.extend.option eq 'ORDERMANAGEMENT'}">
+            <!--订单信息的展示-->
+            <table class="table table-striped"
+                   th:if="${result.extend.action eq 'LOOK'}">
+                <thead>
+                <tr>
+                    <th>订单编号</th>
+                    <th>书名</th>
+                    <th>客户名</th>
+                    <th>数量</th>
+                    <th>下单日期</th>
+                    <th>发货状态</th>
+                    <th>收货状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody th:unless="${result.extend.orders eq 'NOORDER'}">
+                <tr th:each="order:${result.extend.orders}">
+                    <th th:text="${order.id}">订单编号</th>
+                    <th th:text="${order.bookName}" th:unless="${order.bookName eq '图书已下架'}">书名</th>
+                    <th th:text="${order.bookName}" th:if="${order.bookName eq '图书已下架'}" style="color: #d43f3a">书名</th>
+                    <th th:text="${order.custName}" th:unless="${order.custName eq '用户已删除'}">客户名</th>
+                    <th th:text="${order.custName}" th:if="${order.custName eq '用户已删除'}" style="color: #d43f3a">客户名</th>
+                    <th th:text="${order.orderCount}">数量</th>
+                    <th th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}">下单日期</th>
+                    <th>
+                        <!--发货状态-->
+                        <span th:unless="${order.postStatus}"
+                              style="color: #d43f3a">未发</span>
+                        <span th:if="${order.postStatus}" style="color: #3e8f3e">已发</span>
+                    </th>
+                    <th>
+                        <!--收货状态-->
+                        <span th:unless="${order.recevStatus}"
+                              style="color: #d43f3a">未收</span>
+                        <span th:if="${order.recevStatus}" style="color: #3e8f3e">已收</span>
+                    </th>
+                    <th><a class="btn btn-primary btn-sm edit_btn"
+                           th:href="@{'/Manager/OrderDetail?id=' + ${order.id}}" role="button"><span
+                            class="glyphicon glyphicon-eye-open">详情</span></a>
+                        <a class="btn btn-danger btn-sm delete_btn"
+                           th:href="@{'/Manager/OrderDelete?id=' + ${order.id}}" role="button"><span
+                                class="glyphicon glyphicon-trash">删除</span></a>
+                    </th>
+                </tr>
+                </tbody>
+            </table>
+            <!--订单详细信息展示-->
+            <div th:if="${result.extend.action eq 'DETAIL'}">
+                <div class="" style="width: 65%; margin: 0 auto; padding: 0px;">
+                    <div class=""
+                         style="width: 700px; background-color:#edeff0; margin: 50px auto; margin-bottom: 40px; padding: 30px; border: 1px solid #d9d9d9; box-sizing: border-box; overflow: hidden;">
+                        <div class=""
+                             style="position: relative; float:left; width: 200px; box-sizing: border-box; margin: 0px; padding: 0px;">
+                            <div class=""
+                                 style="position: relative; width: 200px; height: 200px; margin: 20px auto; padding: 0px;">
+                                <a href="#">
+                                    <img th:src="@{${result.extend.order.bookPicture}}"
+                                         style="width: 100%;height: 100%;cursor: pointer;">
+                                </a>
+                            </div>
+                        </div>
+                        <div class=""
+                             style="float: right; width: 400px; box-sizing: border-box; margin: 0px; padding: 0px;">
+                            <div class=""
+                                 style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #d9d9d9;">
+                                <h3 style="margin: 0 0 6px 0; color: #0f0f0f">订单编号:<a
+                                        th:text="${result.extend.order.id}"></a></h3>
+                            </div>
+                            <div class=""
+                                 style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #d9d9d9; color: #737373">
+                                <dl>
+                                    <!--style="font-size: 12px; margin: 12px 0; color: #737373"-->
+                                    <dt style="float: left">客户名:</dt>
+                                    <dd th:text="${result.extend.order.custName}"
+                                        th:unless="${result.extend.order.custName eq '用户已删除'}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                    <dd th:text="${result.extend.order.custName}"
+                                        th:if="${result.extend.order.custName eq '用户已删除'}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;color: #d43f3a;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">书名:</dt>
+                                    <dd th:text="${result.extend.order.bookName}"
+                                        th:unless="${result.extend.order.bookName eq '图书已下架'}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                    <dd th:text="${result.extend.order.bookName}"
+                                        th:if="${result.extend.order.bookName eq '图书已下架'}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px; color: #d43f3a;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">购买数量:</dt>
+                                    <dd th:text="${result.extend.order.orderCount}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">总价:</dt>
+                                    <dd th:text="${result.extend.order.totalPrice}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">配送方式:</dt>
+                                    <dd th:text="${result.extend.order.postMethod}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">支付方式:</dt>
+                                    <dd th:text="${result.extend.order.payMethod}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">收货人姓名:</dt>
+                                    <dd th:text="${result.extend.order.receverName}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">收货人地址:</dt>
+                                    <dd th:text="${result.extend.order.receverAddr}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">收货人电话:</dt>
+                                    <dd th:text="${result.extend.order.receverTel}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">留言:</dt>
+                                    <dd th:text="${result.extend.order.message}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">下单时间:</dt>
+                                    <dd th:text="${#dates.format(result.extend.order.orderDate, 'yyyy-MM-dd HH:mm:ss')}"
+                                        style="margin-left: 100px;word-wrap: break-word;font-size: 12px;"></dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">发货状态:</dt>
+                                    <dd style="margin-left: 100px;word-wrap: break-word;font-size: 12px;">
+                                        <a th:unless="${result.extend.order.postStatus}" style="color: #d43f3a">未发</a>
+                                        <a th:if="${result.extend.order.postStatus}" style="color: #3e8f3e">已发</a>
+                                        <a role="button" class="btn btn-primary btn-xs"
+                                           th:unless="${result.extend.order.postStatus}"
+                                           th:href="@{'/Manager/ConfirmShipment?id=' + ${result.extend.order.id}}">点击发货</a>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt style="float: left">收货状态:</dt>
+                                    <dd style="margin-left: 100px;word-wrap: break-word;font-size: 12px;">
+                                        <a th:unless="${result.extend.order.recevStatus}" style="color: #d43f3a">未收</a>
+                                        <a th:if="${result.extend.order.recevStatus}" style="color: #3e8f3e">已收</a>
+                                        <a role="button" class="btn btn-primary btn-xs"
+                                           th:unless="${result.extend.order.recevStatus}"
+                                           th:href="@{'/Manager/ConfirmReceipt?id=' + ${result.extend.order.id}}">确认收货</a>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

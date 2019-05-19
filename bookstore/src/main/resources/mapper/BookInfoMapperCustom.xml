@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.store.mapper.BookInfoMapperCustom" >
+  
+  <!-- 通过书籍类型来查询图书 -->
+  <select id="queryBookInfoByTypeId" resultType="com.store.pojo.BookInfo" parameterType="java.lang.String">
+    select * from tb_bookinfo b1 left join tb_booktypeinfo b1 on b1.type_Id = b2.book_type_Id 
+  </select>
+  
+  
+</mapper>

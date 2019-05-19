@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+    <style>
+        .btn {
+            color: blue;
+            background-color: #FFFFFF;
+            border: 0px none;
+        / / 去边框 font-family: "宋体";
+            font-size: 15px;
+            text-decoration: underline;
+        / / 加下划线
+        }
+
+        .btn:hover {
+            color: red;
+            border: none;
+            cursor: hand;
+            cursor: pointer;
+            text-decoration: underline;
+        / / 加下划线
+        }
+
+        .btn:focus {
+            outline: none;
+        / / 去边框
+        }
+    </style>
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.min.css}">
+    <script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.min.js}"></script>
+</head>
+<body style="background-image: url(/img/header-app-image.jpg);">
+<!-- 头部 -->
+<header class="" style="border:none;">
+    <nav class="navbar navbar-default" style="background-color:rgba(9,24,39,0.5); border:none;">
+        <div class="col-md-1"><a href="#" style="color: #d9534f; font-family: Arial; font-size: 30px;text-decoration:none;"><strong>Book</strong></a></div>
+        <div class="container-fluid col-md-11" style="border:none;">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand " th:if="${result.extend.typeId eq 'ALL'}" href="/bookstore/querypaged"
+                   style="color: #db6f6a; font-size: 20px;"><strong>All</strong></a>
+                <a class="navbar-brand " th:unless="${result.extend.typeId eq 'ALL'}" href="/bookstore/querypaged"
+                   style="color: #a6e1ec; font-size: 20px;"><strong>All</strong></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav" th:each="type:${result.extend.types}">
+                    <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
+                    <li th:if="${type.bookTypeId != result.extend.typeId}"><a
+                            th:href="@{'/bookstore/queryByType?typeId=' + ${type.bookTypeId}}"
+                            th:text="${type.bookTypeName}" style="color: #a6e1ec"></a></li>
+                    <li th:if="${type.bookTypeId == result.extend.typeId}"><a
+                            th:href="@{'/bookstore/queryByType?typeId=' + ${type.bookTypeId}}"
+                            th:text="${type.bookTypeName}" style="color: #db6f6a"></a></li>
+                </ul>
+                <form class="navbar-form navbar-left" method="get" action="/bookstore/queryByName">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="name" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-default" style="text-decoration:none;">GO</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right" th:unless="${result.extend.user eq 'NOUSER'}">
+                    <li>
+                        <a style="color: #a6e1ec; font-size: 20px;" th:href="@{'/customer/userInfo'}" >
+                            <strong th:text="${result.extend.user.custName}">Home</strong>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" th:if="${result.extend.user eq 'NOUSER'}">
+                    <li>
+                        <a style="color: #a6e1ec; font-size: 20px;" href="/customer/signUp"><strong>Sign Up</strong></a>
+                    </li>
+                </ul>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <ul class="nav navbar-nav navbar-right" th:if="${result.extend.user eq 'NOUSER'}">
+                    <li>
+                        <a style="color: #a6e1ec; font-size: 20px;" href="/customer/signIn"><strong>Sign In</strong></a>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>
+<div id="main">
+    <div class="container">
+        <!-- 用户信息 -->
+        <div style="padding-top: 4%;padding-bottom: 30px;">
+            <a><span
+                    style="color:#ffffff;font-size: 30px; font-family: Verdana;"><strong>User Sign In</strong></span></a>
+        </div>
+        <form class="form-horizontal " method="POST" th:action="@{/customer/sign_in}" th:if="${result.extend.isFirst eq 'NO'}">
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="color: #db6f6a"><strong>用户名</strong></label>
+                <div class="col-sm-4" th:unless="${result.extend.message eq '该用户不存在,请先注册'}">
+                    <input type="text" class="form-control" th:value="${result.extend.userLogin.custName}" name="custName" placeholder="Username">
+                </div>
+                <div class="col-sm-4" th:if="${result.extend.message eq '该用户不存在,请先注册'}">
+                    <input type="text" class="form-control" name="custName" placeholder="该用户不存在,请先注册" style="background-color: #DB7E6B;">
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="color: #db6f6a"><strong>密码</strong></label>
+                <div class="col-sm-4" th:unless="${result.extend.message eq '密码错误请重新输入'}">
+                    <input type="password" class="form-control" name="custPwd" placeholder="Password">
+                </div>
+                <div class="col-sm-4" th:if="${result.extend.message eq '密码错误请重新输入'}">
+                    <input type="password" class="form-control" name="custPwd" placeholder="密码错误请重新输入" style="background-color: #DB7E6B;">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-8">
+                    <button type="submit" class="btn btn-default">Sign in</button>
+                </div>
+            </div>
+        </form>
+        <form class="form-horizontal " method="POST" th:action="@{/customer/sign_in}" th:if="${result.extend.isFirst eq 'YES'}">
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="color: #db6f6a"><strong>用户名</strong></label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="custName" placeholder="Username">
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="color: #db6f6a"><strong>密码</strong></label>
+                <div class="col-sm-4">
+                    <input type="password" class="form-control" name="custPwd" placeholder="Password">
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-8">
+                    <button type="submit" class="btn btn-default" style="text-decoration:none;">Sign in</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--分页-->
+</div>
+<!-- 尾部 -->
+<footer class="footer">
+    <div class="waper">
+        <div class="footerWaper">
+            <div class="followus">
+                <a href="" class="followus_weixin">
+                    <div class="flw-weixin-box"></div>
+                </a>
+                <a href="" class="followus_weibo"></a>
+                <a href="" class="followus_qzone"></a>
+            </div>
+            <div class="footer_intro">
+                <div class="footer_link">
+                    <ul>
+                        <li><a href="">网站首页</a></li>
+                        <li><a href="">企业合作</a></li>
+                        <li><a href="">人才招聘</a></li>
+                        <li><a href="">联系我们</a></li>
+                        <li><a href="">讲师招募</a></li>
+                        <li><a href="">常见问题</a></li>
+                        <li><a href="">意见反馈</a></li>
+                        <li><a href="">慕课大学</a></li>
+                        <li><a href="">友情链接</a></li>
+                    </ul>
+                </div>
+                <p>Copyright © 2017 imooc.com All Rights Reserved | 京ICP备 13046642号-2</p>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

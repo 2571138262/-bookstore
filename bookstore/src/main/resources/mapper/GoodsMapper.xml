@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.store.mapper.GoodsMapper">
+  <resultMap id="BaseResultMap" type="com.store.pojo.Goods">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="goods_id" jdbcType="INTEGER" property="goodsId" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="bookinfo_id" jdbcType="INTEGER" property="bookinfoId" />
+    <result column="bookinfo_name" jdbcType="VARCHAR" property="bookinfoName" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="total_price" jdbcType="DOUBLE" property="totalPrice" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.store.pojo.Goods">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="goods_id" jdbcType="INTEGER" property="goodsId" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="bookinfo_id" jdbcType="INTEGER" property="bookinfoId" />
+    <result column="bookinfo_name" jdbcType="VARCHAR" property="bookinfoName" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="total_price" jdbcType="DOUBLE" property="totalPrice" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>网上书店管理员服务门户
+    </title>
+    <style>
+        body {
+            background-image: url(/img/bg1.jpg);
+            content: "";
+            width: 100%;
+            background-color: rgba(59, 141, 209, 0.6);
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            right: 0px;
+            color: #6c6c6c;
+            margin: 0px;
+            line-height: 16px;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            vertical-align: baseline;
+            min-height: 100%;
+            font: 14px Helvetica Neue, Helvetica, PingFang SC, \5FAE\8F6F\96C5\9ED1, Tahoma, Arial, sans-serif;
+            font-style: normal;
+            font-variant-ligatures: normal;
+            font-variant-caps: normal;
+            font-variant-numeric: normal;
+            font-variant-east-asian: normal;
+            font-weight: normal;
+            font-stretch: normal;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            display: block;
+        }
+
+        form {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            font-size: 100%;
+            vertical-align: baseline;
+            background: transparent;
+            background-image: initial;
+            background-position-x: initial;
+            background-position-y: initial;
+            background-size: initial;
+            background-repeat-x: initial;
+            background-repeat-y: initial;
+            background-attachment: initial;
+            background-origin: initial;
+            background-clip: initial;
+            background-color: transparent;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            display: block;
+        }
+
+        div {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            font-size: 100%;
+            vertical-align: baseline;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            display: block;
+            background: transparent;
+        }
+
+        .logo {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: normal;
+            color: #3B8DD1;
+            line-height: 3;
+        }
+
+        .logo img {
+            vertical-align: middle;
+            width: 40px;
+        }
+
+        img {
+            border: 0;
+            margin: 0;
+            padding: 0;
+            outline: 0;
+            font-size: 100%;
+            vertical-align: baseline;
+            background: transparent;
+            display: inline-block;
+        }
+
+        .inputbox {
+            width: 360px;
+            margin: 0 auto;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, .3);
+            border-radius: 8px;
+            background-color: #FFFFFF;
+            padding: 20px 30px;
+            position: absolute;
+            z-index: 99;
+            left: 50%;
+            margin-left: -220px;
+        }
+
+        .content {
+            background: url(../img/bg1.jpg) no-repeat center center;
+            background-size: 100%;
+            width: 100%;
+            background-size: 100%;
+            box-sizing: border-box;
+        }
+
+        .input {
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #DCDDDD;
+            margin-bottom: 15px;
+            height: 40px;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+            font-style: inherit;
+            font-weight: inherit;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .input i {
+            color: #9FA0A0;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            display: inline-block;
+            float: left;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            vertical-align: baseline;
+            background: transparent;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-style: italic;
+        }
+
+        .input input {
+            width: 100%;
+            padding: 5px 10px 5px 40px;
+            line-height: 30px;
+            font-size: 14px;
+            color: #3E3A39;
+            border: none;
+            box-sizing: border-box;
+        }
+
+        .layui-input {
+            display: block;
+            height: 38px;
+            line-height: 38px \9;
+            border-radius: 2px;
+            outline: 0;
+            -webkit-appearance: none;
+            -webkit-transition: all .3s;
+        }
+
+        .layui-btn-normal {
+            background-color: #1E9FFF;
+        }
+
+        .layui-btn {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            outline: 0;
+            -webkit-appearance: none;
+            -webkit-transition: all .3s;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<form name="form1" method="post" th:action="@{'/manager/validateLogon'}" th:if="${result.extend.state eq 'FIRST'}">
+    <div class="content" style="height: 723px; padding-top: 236.5px;">
+        <div class="inputbox layui-form">
+            <div class="logo">
+                <img src="img/sunboxsoft_login.png"/>网上书店管理员服务门户
+            </div>
+            <div class="input">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <input name="adminName" type="text" id="txtUserID" placeholder="账号" class="layui-input"
+                       lay-verify="required"/>
+            </div>
+            <div class="input">
+                <i class="fa fa-lock" aria-hidden="true"></i>
+                <input name="adminPwd" type="password" id="txtPassword" placeholder="密码" class="layui-input"
+                       lay-verify="required"/>
+            </div>
+            <input type="submit" name="btnLogin" value="登 录" id="btnLogin" class="layui-btn layui-btn-normal"
+                   lay-submit="" lay-filter="login" style="width:100%;"/>
+        </div>
+    </div>
+</form>
+<form name="form1" method="post" th:action="@{'/manager/validateLogon'}" th:if="${result.extend.state eq 'ERROR'}">
+    <div class="content" style="height: 723px; padding-top: 236.5px;">
+        <div class="inputbox layui-form">
+            <div class="logo">
+                <img src="img/sunboxsoft_login.png"/>网上书店管理员服务门户
+            </div>
+            <div class="input" th:switch="${result.extend.message}">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <input th:name="adminName" type="text" class="layui-input"
+                       lay-verify="required" th:case="'用户不存在'" placeholder="用户不存在"
+                       style="background-color: #DB7E6B;"/>
+                <input th:name="adminName" type="text" th:case="'用户名为空'"
+                       style="background-color: #DB7E6B;" placeholder="用户名为空" class="layui-input"
+                       lay-verify="required"/>
+                <input th:name="adminName" type="text" th:case="*" placeholder="Username"
+                       class="layui-input"
+                       lay-verify="required"/>
+            </div>
+            <div class="input">
+                <i class="fa fa-lock" aria-hidden="true"></i>
+                <input th:name="adminPwd" type="password" class="layui-input"
+                       lay-verify="required" th:if="${result.extend.message eq '密码有误'}" placeholder="密码有误"
+                       style="background-color: #DB7E6B;"/>
+                <input th:name="adminPwd" type="password" class="layui-input"
+                       lay-verify="required" th:unless="${result.extend.message eq '密码有误'}" placeholder="Password"/>
+            </div>
+            <input type="submit" name="btnLogin" value="登 录" class="layui-btn layui-btn-normal"
+                   lay-submit="" lay-filter="login" style="width:100%;"/>
+        </div>
+    </div>
+</form>
+</body>
+</html>

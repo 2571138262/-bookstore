@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.store.mapper.CustomerInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.store.pojo.CustomerInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="cust_Id" property="custId" jdbcType="INTEGER" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="cust_pwd" property="custPwd" jdbcType="VARCHAR" />
+    <result column="cust_true_name" property="custTrueName" jdbcType="VARCHAR" />
+    <result column="cust_sex" property="custSex" jdbcType="BIT" />
+    <result column="cust_tel" property="custTel" jdbcType="VARCHAR" />
+    <result column="cust_email" property="custEmail" jdbcType="VARCHAR" />
+    <result column="cust_addr" property="custAddr" jdbcType="VARCHAR" />
+    <result column="cust_reg_time" property="custRegTime" jdbcType="TIMESTAMP" />
+    <result column="cust_last_login" property="custLastLogin" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>

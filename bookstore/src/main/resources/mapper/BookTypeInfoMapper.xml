@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.store.mapper.BookTypeInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.store.pojo.BookTypeInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="book_type_Id" property="bookTypeId" jdbcType="INTEGER" />
+    <result column="book_type_name" property="bookTypeName" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>
